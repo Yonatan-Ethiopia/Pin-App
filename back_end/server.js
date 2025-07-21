@@ -1,10 +1,13 @@
-const express = require('express')                                          
+const express = require('express')
+const bot = require('/bot.js')
+const db = require('./config/db')
 require('dotenv').config()
 const port = process.env.PORT
 const app = express()
-const getRoute = require('routes/getRoute')
+const getRoute = require('/routes/getRoute')
 app.use(express.json())
 app.use('/api', getRoute)
-app.on( port, ()=>{
+app.listen( port, async ()=>{
 	console.log(`Server running on port ${port}`)
+	await bot.setWehook('')
 })
