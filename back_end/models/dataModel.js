@@ -1,7 +1,7 @@
-const mogoose = require('mogoose')
+const mongoose = require('mongoose')
 const dataSchema = new mongoose.Schema({
 	img:{ type:String, requirded:true },
 	sender:{ type:String, required:true },
 	caption:{ type:String }
 })
-model.exports = mogoose.model('data',dataSchema)
+module.exports = mongoose.model('data',dataSchema)
