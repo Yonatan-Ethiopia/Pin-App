@@ -1,6 +1,7 @@
 let isDetail = false;
 let justOpened = true;
-const data = [{
+const demo = [{
+
     image: "src/img1.jpg",
     sender: "josh"
 },
@@ -112,11 +113,14 @@ const data = [{
         caption: "lol"
     },
 ]
-console.log(data.length);
-loadContent()
+
 
 let lastScrollTop = 0;
 const header = document.querySelector("header");
+let currentPage = 1;
+let loading = false;
+
+
 
 document.addEventListener("scroll", () => {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -133,7 +137,16 @@ document.addEventListener("scroll", () => {
 });
 const menuBtn = document.getElementById("menuToggle");
 const sidebar = document.querySelector(".sidebar");
-
+async function loadInitialPosts(){
+	try{
+		 const res = await fetch('/api/get/Images?page=1')
+		 const data = await res.json()
+		 renderRealPosts(data)
+		 console.log(data)
+	}catch(err){
+		console.log("Error while loading initial posts", err);
+	}
+}
 document.getElementById("sidebarClose").addEventListener("click", () => {
     sidebar.classList.remove("active");
     menuBtn.textContent = "☰";
@@ -240,9 +253,9 @@ function showSkeletons(count = 6) {
 function isEven(number) {
     return number % 2 === 0;
 }
-function loadContent() {
+function loadContent(data) {
     showSkeletons(); // show placeholders first
-
+	  console.log(data)
     // simulate fetch delay (e.g. 1 second)
     setTimeout(() => {
         renderRealPosts(data); // after "loading", show actual posts
@@ -329,7 +342,7 @@ function detail(post) {
     const img_path = post.image;
     const sender = document.createElement("div");
     sender.className = "sender";
-    sender.textContent = post.sender;
+    sender.textContent = post.senderName;
     const caption = document.createElement("div");
     caption.className = "caption";
     caption.textContent = post.caption;
@@ -344,20 +357,29 @@ function detail(post) {
     main.appendChild(det);
 }
 const feed = document.getElementById("feed");
-function renderRealPosts(data) {
+async function getPath(id){
+	//const urlRes = await fetch(`/api/get/Images/${id}`)
+	//const { imgURL } = await urlRes.json()
+	const imgPath = await fetch(`/api/get/Image/${id}`);
+	console.log("file link: ",imgPath)
+	return imgPath 
+}
+async function renderRealPosts(data) {
     feed.innerHTML = "";
     data.forEach((post, index) => {
 
         //const feed = document.getElementById("feed");
-
+        
+		//const urlRes = await fetch('/api/get/Images/${post.img}')
+		
         const card = document.createElement("div");
         card.className = "card"
-        const imgPath = post.image;
-        const senderName = post.sender;
+        const imgPath = `/api/get/Images/${post.img}`;
+        const senderName = post.senderName;
         const caption = post.caption;
         card.addEventListener("click", ()=> {
             const oPost = {
-                image: imgPath, sender: senderName, caption: caption
+                image: imgPath, senderName: senderName, caption: caption
             }
             if (!isDetail) {
                 console.log(isDetail)
@@ -366,12 +388,13 @@ function renderRealPosts(data) {
         });
 
         const img = document.createElement("img")
-        img.src = post.image;
+        img.src = imgPath;
+        img.loading="lazy"
         const sender = document.createElement("div");
         const cont = document.createElement("div");
         cont.className = "cont"
         sender.className = "sender";
-        sender.textContent = post.sender;
+        sender.textContent = post.senderName;
         cont.appendChild(img);
         cont.appendChild(sender);
         card.appendChild(cont);
@@ -382,6 +405,7 @@ function renderRealPosts(data) {
 
     });
 }
+loadInitialPosts()
 /*
 for( i=0, i<data.length, i++){
     const card = document.getElementById("card")
