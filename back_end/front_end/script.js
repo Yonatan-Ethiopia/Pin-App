@@ -1,125 +1,27 @@
 let isDetail = false;
 let justOpened = true;
-const demo = [{
-
-    image: "src/img1.jpg",
-    sender: "josh"
-},
-    {
-        image: "src/img2.jpg",
-        sender: "lolly"
-    },
-    {
-        image: "src/img3.jpg",
-        sender: "bob"
-    },
-    {
-        image: "src/img4.jpg",
-        sender: "belly"
-    },
-    {
-        image: "src/img5.jpg",
-        sender: "cushy"
-    },
-    {
-        image: "src/img6.jpg",
-        sender: "flower"
-    },
-    {
-        image: "src/img7.jpg",
-        sender: "ace"
-    },
-    {
-        image: "src/img8.jpg",
-        sender: "log"
-    },
-    {
-        image: "src/img9.jpg",
-        sender: "crown"
-    },
-    {
-        image: "src/img10.jpg",
-        sender: "tooth"
-    },
-    {
-        image: "src/img11.jpg",
-        sender: "flower"
-    },
-    {
-        image: "src/img12.jpg",
-        sender: "log"
-    },
-    {
-        image: "src/img13.jpg",
-        sender: "tooth"
-    },
-    {
-        image: "src/img14.jpg",
-        sender: "crop",
-        caption: ""
-    },
-    {
-        image: "src/img15.jpg",
-        sender: "flare"
-    },
-    {
-        image: "src/img16.jpg",
-        sender: "blake",
-        caption: ""
-    },
-    {
-        image: "src/img17.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img18.jpg",
-        sender: "okay",
-        caption: ""
-    },
-    {
-        image: "src/img19.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img20.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img21.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img22.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img23.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img24.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img25.jpg",
-        sender: "tooth",
-        caption: "lol"
-    },
-]
-
 
 let lastScrollTop = 0;
 const header = document.querySelector("header");
+
 let currentPage = 1;
 let loading = false;
 
+window.addEventListener('scroll', async () => {
+  if (loading) return;
+
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+    // Near the bottom
+    loading = true;
+    currentPage++;
+
+    const res = await fetch(`/api/get/Images?page=${currentPage}`);
+    const data = await res.json();
+
+    await renderRealPosts(data); // Load new images
+    loading = false;
+  }
+});
 
 
 document.addEventListener("scroll", () => {
@@ -313,6 +215,8 @@ function detail(post) {
     img_Part.className = "img_Part"
     const img = document.createElement("img");
     img.src = post.image;
+    console.log("specific img src", img.src)
+    console.log("Specific img link: ", post.image)
     const upper_Part = document.createElement("div");
     upper_Part.className = "upperPart"
     upper_Part.id = "upperPart"
@@ -365,46 +269,79 @@ async function getPath(id){
 	return imgPath 
 }
 async function renderRealPosts(data) {
-    feed.innerHTML = "";
-    data.forEach((post, index) => {
 
-        //const feed = document.getElementById("feed");
-        
-		//const urlRes = await fetch('/api/get/Images/${post.img}')
-		
+    data.forEach((post) => {
         const card = document.createElement("div");
-        card.className = "card"
-        const imgPath = `/api/get/Images/${post.img}`;
-        const senderName = post.senderName;
-        const caption = post.caption;
-        card.addEventListener("click", ()=> {
-            const oPost = {
-                image: imgPath, senderName: senderName, caption: caption
-            }
-            if (!isDetail) {
-                console.log(isDetail)
-                detail(oPost);
-            }
-        });
+        card.className = "card";
 
-        const img = document.createElement("img")
-        img.src = imgPath;
-        img.loading="lazy"
-        const sender = document.createElement("div");
         const cont = document.createElement("div");
-        cont.className = "cont"
+        cont.className = "cont";
+
+        // Skeletons
+        const skeletonImg = document.createElement("div");
+        skeletonImg.className = "skeleton skeleton-img";
+
+        const skeletonText1 = document.createElement("div");
+        skeletonText1.className = "skeleton skeleton-text";
+        skeletonText1.style.width = "60%";
+
+        const skeletonText2 = document.createElement("div");
+        skeletonText2.className = "skeleton skeleton-text";
+        skeletonText2.style.width = "80%";
+
+        // Real elements (initially hidden)
+        const img = document.createElement("img");
+        
+
+        const sender = document.createElement("div");
         sender.className = "sender";
         sender.textContent = post.senderName;
+        sender.style.display = "none";
+        const imgPath = `https://7cc94e0aca04.ngrok-free.app/api/get/Images/${post.img}`
+		img.src = imgPath;
+        img.loading = "lazy";
+        //img.style.display = "none";
+		console.log("image link: ", img.src)
+        // Load handlers
+        img.onload = () => {
+			console.log("image loaded real: ", img.src)
+			console.log("image loaded real 2:", imgPath)
+            skeletonImg.remove();
+            skeletonText1.remove();
+            skeletonText2.remove();
+            img.style.display = "block";
+            sender.style.display = "block";
+        };
+
+        img.onerror = () => {
+            skeletonImg.remove();
+            skeletonText1.remove();
+            skeletonText2.remove();
+            img.style.display ="none"
+            // No image or sender shown
+        };
+        
+        // Append everything once
+        cont.appendChild(skeletonImg);
+        cont.appendChild(skeletonText1);
+        cont.appendChild(skeletonText2);
         cont.appendChild(img);
         cont.appendChild(sender);
         card.appendChild(cont);
-        setTimeout(() => {
-            feed.appendChild(card); // after "loading", show actual posts
-        },
-            100);;
+        feed.appendChild(card);
 
+        card.addEventListener("click", () => {
+            const oPost = {
+                image: img.src,
+                senderName: post.senderName,
+                caption: post.caption
+            };
+            if (!isDetail) detail(oPost);
+        });
     });
 }
+
+
 loadInitialPosts()
 /*
 for( i=0, i<data.length, i++){

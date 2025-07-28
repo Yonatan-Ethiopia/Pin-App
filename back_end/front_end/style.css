@@ -243,12 +243,12 @@ p {
 }*/
 .feed {
     column-count: 2;
-    column-gap: 1em;
+    column-gap: 0.4em;
     
     width: 100%;
     margin: 0 auto;
     /*overflow-y: auto;*/
-    padding: 1rem;
+    padding: 0.1rem; 
 }
 @media ( min-width : 764px ){
     .feed{
@@ -310,11 +310,11 @@ p {
 .cont img {
     width: 100%;
     height: auto;
-    display: block;
+    
     border-radius: 15px;
 }
 .cont .sender {
-    padding: 0.5rem;
+    padding: 0.2rem;
     font-size: 0.9rem;
     color: white;
     font-weight: bold;

@@ -48,13 +48,14 @@ app.post(`/bot${token}`, (req, res) => {
 });
 
 bot.onText(/\/start/, async (msg) => {
+	
   bot.sendMessage(msg.chat.id, "Welcome to AASTU GALLERY!", {
   reply_markup: {
     inline_keyboard: [[
       {
        text: "Open Gallery",
         web_app: {
-          url: "https://b49982ebfc00.ngrok-free.app"
+          url: WEBHOOK_URL
         }
       }
     ]]

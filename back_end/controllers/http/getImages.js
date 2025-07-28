@@ -3,7 +3,8 @@ const data = require('../../models/dataModel')
 const bot = require('../../bot')
 const { Readable } = require('stream');
 
-const limit = 20
+const limit = 10
+
 const getImages = async (req,res)=>{
 	const skip = (req.query.page - 1) * limit
 	const filteredData = await data.find().sort({ createdAt: -1}).skip(skip).limit(limit);
