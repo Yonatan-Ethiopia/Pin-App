@@ -6,8 +6,8 @@ const { Readable } = require('stream');
 const limit = 10
 
 const getImages = async (req,res)=>{
-	const skip = (req.query.page - 1) * limit
-	const filteredData = await data.find().sort({ createdAt: -1}).skip(skip).limit(limit);
+	//const skip = (req.query.page - 1) * limit
+	const filteredData = await data.find().sort({ createdAt: -1})
 	res.status(200).json(filteredData)
 	console.log("Data sent :", filteredData)
 }

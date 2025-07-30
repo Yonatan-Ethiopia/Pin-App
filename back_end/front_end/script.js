@@ -7,21 +7,6 @@ const header = document.querySelector("header");
 let currentPage = 1;
 let loading = false;
 
-window.addEventListener('scroll', async () => {
-  if (loading) return;
-
-  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
-    // Near the bottom
-    loading = true;
-    currentPage++;
-
-    const res = await fetch(`/api/get/Images?page=${currentPage}`);
-    const data = await res.json();
-
-    await renderRealPosts(data); // Load new images
-    loading = false;
-  }
-});
 
 
 document.addEventListener("scroll", () => {
@@ -41,7 +26,7 @@ const menuBtn = document.getElementById("menuToggle");
 const sidebar = document.querySelector(".sidebar");
 async function loadInitialPosts(){
 	try{
-		 const res = await fetch('/api/get/Images?page=1')
+		 const res = await fetch('/api/get/Images?page')
 		 const data = await res.json()
 		 renderRealPosts(data)
 		 console.log(data)
@@ -306,18 +291,15 @@ async function renderRealPosts(data) {
         img.onload = () => {
 			console.log("image loaded real: ", img.src)
 			console.log("image loaded real 2:", imgPath)
-            skeletonImg.remove();
-            skeletonText1.remove();
-            skeletonText2.remove();
+            
             img.style.display = "block";
             sender.style.display = "block";
         };
 
         img.onerror = () => {
-            skeletonImg.remove();
-            skeletonText1.remove();
-            skeletonText2.remove();
-            img.style.display ="none"
+            
+            img.style.display = "none" 
+            cont.style.display = "none"
             // No image or sender shown
         };
         
