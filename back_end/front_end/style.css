@@ -149,7 +149,6 @@ html, body {
     .hamburger {
         display: block;
     }
-
     .sidebar {
         position: fixed;
         top: 0;
@@ -216,8 +215,6 @@ p {
     -webkit-backdrop-filter: blur (100px);
 }
 .main {
-    display: flex;
-    flex-direction: column;
     /*padding: 0;
     margin: 0;*/
 }
@@ -242,67 +239,54 @@ p {
     box-sizing: border-box;
 }*/
 .feed {
-    column-count: 2;
-    column-gap: 0.4em;
-    
-    width: 100%;
-    margin: 0 auto;
-    /*overflow-y: auto;*/
-    padding: 0.1rem; 
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.1rem;
+  position: relative;
 }
-@media ( min-width : 764px ){
-    .feed{
-        column-count:3;
-        width: auto;
-        flex:1;
-    }
-    .sidebar-close{
-        display:none;
-        }
-    .sidebar{
-        background-color:#111111;
-        }
-        
+
+/* Grid base width (used by Masonry for columns) */
+.grid-sizer {
+  width: 50%;
 }
-@media ( min-width : 1024px){
-    .sidebar-close{
-        display:none;
-    }
-    .feed{
-        column-count:4;
-        width: auto;
-        flex:1;
-    }
-    .sidebar{
-        background-color:#111111;
-        }
+
+.card {
+  
+  margin-bottom: 1em;
+  background: #111;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
-@media ( min-width : 1190px){
-    .feed{
-        column-count:5;
-        width: auto;
-        flex:1;
-    }
-    .sidebar-close{
-        display:none;
-        }
-    .sidebar{
-        background-color:#111111;
-        }
+.grid-sizer,
+.card{
+    width:48%;
 }
+@media (min-width: 768px) {
+  .grid-sizer, .card{
+    width: 31%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-sizer, .card{
+    width: 23%;
+  }
+  .sidebar-close{
+	     display: none;
+	     }
+}
+@media (min-width: 1280px) {
+  .grid-sizer,
+  .card {
+    width: 18%; /* ~5 columns */
+  }
+}
+
 #feed.blurred {
     filter: blur(4px);
     transition: filter 0.3s ease;
 }
-.card {
-    width: 100%;
-    break-inside: avoid;
-    margin-bottom: 1em;
-    background: #111111;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+
 .cont {
     display: inline-block;
     width: 100%;

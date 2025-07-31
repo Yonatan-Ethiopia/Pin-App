@@ -3,15 +3,16 @@ const data = require('../../models/dataModel')
 const bot = require('../../bot')
 const { Readable } = require('stream');
 
-const limit = 10
+const limit = 58
 
 const getImages = async (req,res)=>{
-	//const skip = (req.query.page - 1) * limit
-	const filteredData = await data.find().sort({ createdAt: -1})
+	const skip =  48//(req.query.page - 1) * limit
+	const filteredData = await data.find().sort({ createdAt: -1}).skip(skip)
 	res.status(200).json(filteredData)
-	console.log("Data sent :", filteredData)
+	//console.log("Data sent :", filteredData)
 }
 const getURL = async (req,res)=>{
+	console.log("url running")
 	const fileId = req.params.fileId;
     const fileLink = await bot.getFileLink(fileId); // full Telegram URL
 

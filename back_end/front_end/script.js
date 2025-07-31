@@ -7,7 +7,129 @@ const header = document.querySelector("header");
 let currentPage = 1;
 let loading = false;
 
+const data2 = [{
+    image: "src/img1.jpg",
+    sender: "josh"
+},
+    {
+        image: "src/img2.jpg",
+        sender: "lolly"
+    },
+    {
+        image: "src/img3.jpg",
+        sender: "bob"
+    },
+    {
+        image: "src/img4.jpg",
+        sender: "belly"
+    },
+    {
+        image: "src/img5.jpg",
+        sender: "cushy"
+    },
+    {
+        image: "src/img6.jpg",
+        sender: "flower"
+    },
+    {
+        image: "src/img7.jpg",
+        sender: "ace"
+    },
+    {
+        image: "src/img8.jpg",
+        sender: "log"
+    },
+    {
+        image: "src/img9.jpg",
+        sender: "crown"
+    },
+    {
+        image: "src/img10.jpg",
+        sender: "tooth"
+    },
+    {
+        image: "src/img11.jpg",
+        sender: "flower"
+    },
+    {
+        image: "src/img12.jpg",
+        sender: "log"
+    },
+    {
+        image: "src/img13.jpg",
+        sender: "tooth"
+    },
+    {
+        image: "src/img14.jpg",
+        sender: "crop",
+        caption: ""
+    },
+    {
+        image: "src/img15.jpg",
+        sender: "flare"
+    },
+    {
+        image: "src/img16.jpg",
+        sender: "blake",
+        caption: ""
+    },
+    {
+        image: "src/img17.jpg",
+        sender: "tooth",
+        caption: ""
+    },
+    {
+        image: "src/img18.jpg",
+        sender: "okay",
+        caption: ""
+    },
+    {
+        image: "src/img19.jpg",
+        sender: "tooth",
+        caption: ""
+    },
+    {
+        image: "src/img20.jpg",
+        sender: "tooth",
+        caption: ""
+    },
+    {
+        image: "src/img21.jpg",
+        sender: "tooth",
+        caption: ""
+    },
+    {
+        image: "src/img22.jpg",
+        sender: "tooth",
+        caption: ""
+    },
+    {
+        image: "src/img23.jpg",
+        sender: "tooth",
+        caption: ""
+    },
+    {
+        image: "src/img24.jpg",
+        sender: "tooth",
+        caption: ""
+    },
+    {
+        image: "src/img25.jpg",
+        sender: "tooth",
+        caption: "lol"
+    },
+]
 
+document.addEventListener("DOMContentLoaded", () => {
+  const feed = document.getElementById("feed");
+  //feed._masonry = new Masonry(feed, {
+    //itemSelector: '.card',
+    //columnWidth: '.grid-sizer',
+    //percentPostion: true,
+    //gutter: 10
+    
+//});
+})
 
 document.addEventListener("scroll", () => {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -26,7 +148,7 @@ const menuBtn = document.getElementById("menuToggle");
 const sidebar = document.querySelector(".sidebar");
 async function loadInitialPosts(){
 	try{
-		 const res = await fetch('/api/get/Images?page')
+		 const res = await fetch(`/api/get/Images`)
 		 const data = await res.json()
 		 renderRealPosts(data)
 		 console.log(data)
@@ -254,8 +376,11 @@ async function getPath(id){
 	return imgPath 
 }
 async function renderRealPosts(data) {
+    const promises = [];
+    const feed = document.getElementById("feed");
+    console.log("func called");
 
-    data.forEach((post) => {
+    for (const post of data) {
         const card = document.createElement("div");
         card.className = "card";
 
@@ -265,45 +390,40 @@ async function renderRealPosts(data) {
         // Skeletons
         const skeletonImg = document.createElement("div");
         skeletonImg.className = "skeleton skeleton-img";
-
         const skeletonText1 = document.createElement("div");
         skeletonText1.className = "skeleton skeleton-text";
         skeletonText1.style.width = "60%";
-
         const skeletonText2 = document.createElement("div");
         skeletonText2.className = "skeleton skeleton-text";
         skeletonText2.style.width = "80%";
 
-        // Real elements (initially hidden)
+        // Real Elements
         const img = document.createElement("img");
-        
-
         const sender = document.createElement("div");
         sender.className = "sender";
         sender.textContent = post.senderName;
         sender.style.display = "none";
-        const imgPath = `https://7cc94e0aca04.ngrok-free.app/api/get/Images/${post.img}`
-		img.src = imgPath;
-        img.loading = "lazy";
-        //img.style.display = "none";
-		console.log("image link: ", img.src)
-        // Load handlers
-        img.onload = () => {
-			console.log("image loaded real: ", img.src)
-			console.log("image loaded real 2:", imgPath)
-            
-            img.style.display = "block";
-            sender.style.display = "block";
-        };
 
-        img.onerror = () => {
-            
-            img.style.display = "none" 
-            cont.style.display = "none"
-            // No image or sender shown
-        };
-        
-        // Append everything once
+        img.src = `/api/get/Images/${post.img}`;
+        img.loading = "lazy";
+
+        // Handle image loading and fallback
+        promises.push(new Promise((resolve) => {
+            img.onload = () => {
+                console.log("Image loaded: ", img.src);
+                skeletonImg.remove();
+                skeletonText1.remove();
+                skeletonText2.remove();
+                img.style.display = "block";
+                sender.style.display = "block";
+                resolve();
+            };
+            img.onerror = () => {
+                card.remove(); // remove card if failed
+                resolve(); // still resolve to not hang Promise.all
+            };
+        }));
+
         cont.appendChild(skeletonImg);
         cont.appendChild(skeletonText1);
         cont.appendChild(skeletonText2);
@@ -320,8 +440,32 @@ async function renderRealPosts(data) {
             };
             if (!isDetail) detail(oPost);
         });
+    }
+
+    // Wait for all images to load
+    await Promise.all(promises);
+
+    // Then apply Masonry layout
+    imagesLoaded(feed, () => {
+        console.log("images loaded");
+        new Masonry(feed, {
+            itemSelector: '.card',
+            columnWidth: '.grid-sizer',
+            percentPosition: true,
+            gutter: 10
+        });
     });
 }
+
+
+// Assuming this function fetches the image URL
+async function getImageURL(fileId) {
+    const res = await fetch(`/api/get/Images/${fileId}`);
+    const data = await res.json();
+    return data.file; // Assuming the backend returns the image URL in 'file' property
+}
+
+
 
 
 loadInitialPosts()
