@@ -6,7 +6,8 @@ const header = document.querySelector("header");
 
 let currentPage = 1;
 let loading = false;
-
+let isLoading=false;
+let isInitial=true;
 const data2 = [{
     image: "src/img1.jpg",
     sender: "josh"
@@ -148,7 +149,7 @@ const menuBtn = document.getElementById("menuToggle");
 const sidebar = document.querySelector(".sidebar");
 async function loadInitialPosts(){
 	try{
-		 const res = await fetch(`/api/get/Images`)
+		 const res = await fetch(`/api/get/Images?page=${currentPage}`)
 		 const data = await res.json()
 		 renderRealPosts(data)
 		 console.log(data)
@@ -375,11 +376,15 @@ async function getPath(id){
 	console.log("file link: ",imgPath)
 	return imgPath 
 }
+const loader = document.getElementById("dot-loader");
 async function renderRealPosts(data) {
     const promises = [];
     const feed = document.getElementById("feed");
+    const loader = document.getElementById("dot-loader");
     console.log("func called");
-
+    if(isInitial){
+		feed.style.display="none"
+	}
     for (const post of data) {
         const card = document.createElement("div");
         card.className = "card";
@@ -388,14 +393,7 @@ async function renderRealPosts(data) {
         cont.className = "cont";
 
         // Skeletons
-        const skeletonImg = document.createElement("div");
-        skeletonImg.className = "skeleton skeleton-img";
-        const skeletonText1 = document.createElement("div");
-        skeletonText1.className = "skeleton skeleton-text";
-        skeletonText1.style.width = "60%";
-        const skeletonText2 = document.createElement("div");
-        skeletonText2.className = "skeleton skeleton-text";
-        skeletonText2.style.width = "80%";
+        
 
         // Real Elements
         const img = document.createElement("img");
@@ -403,18 +401,16 @@ async function renderRealPosts(data) {
         sender.className = "sender";
         sender.textContent = post.senderName;
         sender.style.display = "none";
-
         img.src = `/api/get/Images/${post.img}`;
+        console.log(img.src)
         img.loading = "lazy";
-
+		//img.style.display="none"
         // Handle image loading and fallback
         promises.push(new Promise((resolve) => {
             img.onload = () => {
                 console.log("Image loaded: ", img.src);
-                skeletonImg.remove();
-                skeletonText1.remove();
-                skeletonText2.remove();
-                img.style.display = "block";
+				console.log("cons")
+                //img.style.display = "block";
                 sender.style.display = "block";
                 resolve();
             };
@@ -424,14 +420,12 @@ async function renderRealPosts(data) {
             };
         }));
 
-        cont.appendChild(skeletonImg);
-        cont.appendChild(skeletonText1);
-        cont.appendChild(skeletonText2);
+        
         cont.appendChild(img);
         cont.appendChild(sender);
         card.appendChild(cont);
         feed.appendChild(card);
-
+		console.log("appended: ", feed)
         card.addEventListener("click", () => {
             const oPost = {
                 image: img.src,
@@ -447,6 +441,10 @@ async function renderRealPosts(data) {
 
     // Then apply Masonry layout
     imagesLoaded(feed, () => {
+		//img.style.display = "block";
+		feed.style.display="block"
+		isInitial=false;
+		loader.style.display = "none"
         console.log("images loaded");
         new Masonry(feed, {
             itemSelector: '.card',
@@ -456,7 +454,28 @@ async function renderRealPosts(data) {
         });
     });
 }
+async function loadNextPage() {
+  if (isLoading) return;
+  isLoading = true;
+  loader.classList.remove("hidden");
 
+  const res = await fetch(`/api/get/Images?page=${currentPage}`);
+  const photos = await res.json();
+   console.log("clled render")
+  renderRealPosts(photos);
+  loader.classList.add("hidden");
+
+  isLoading = false;
+  currentPage++;
+}
+window.addEventListener("scroll", () => {
+  if (
+    window.innerHeight + window.scrollY >= document.body.offsetHeight - 300
+  ) {
+	console.log("scrolled")
+    loadNextPage();
+  }
+});
 
 // Assuming this function fetches the image URL
 async function getImageURL(fileId) {

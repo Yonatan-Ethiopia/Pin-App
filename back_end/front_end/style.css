@@ -2,6 +2,7 @@ body {
     margin: 0;
     font-family: sans-serif;
     background-color: #111111;
+    
 }
 html, body {
    scroll-behavior: smooth;
@@ -10,8 +11,18 @@ html, body {
 * {
     box-sizing: border-box;
 }
+.custom-link {
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .custom-link:hover {
+    text-decoration: underline;
+    color: #ffffff;
+  }
 .five{
     display:flex;
+    
     }
 .skeleton {
     background-color: #2a2a2a;
@@ -137,7 +148,7 @@ html, body {
 }
 .sidebar {
   width: 220px;
-  background: #1a1a1a;
+  background: #111111;
   color: white;
   padding: 1rem;
   font-size: 0.9rem;
@@ -215,7 +226,7 @@ p {
     -webkit-backdrop-filter: blur (100px);
 }
 .main {
-    /*padding: 0;
+   /*padding: 0;
     margin: 0;*/
 }
 /*overflow-y: auto;*/
@@ -264,6 +275,9 @@ p {
 @media (min-width: 768px) {
   .grid-sizer, .card{
     width: 31%;
+  }
+  .sidebar-close{
+  display:none;
   }
 }
 
@@ -334,6 +348,54 @@ figure {
     margin-bottom: 0px;
     width: 100%;
 }
+.loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #555;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 0.9s linear infinite;
+  z-index: 9999;
+}
+.dot-loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;                   
+}
+
+.dot-loader span {
+  width: 10px;
+  height: 10px;
+  background: #7a7a7a;
+  border-radius: 50%;
+  animation: bounce 0.5s infinite ease-in-out;
+}
+
+.dot-loader span:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.dot-loader span:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
 @keyframes pop {
     50% {}
 }

@@ -3,11 +3,11 @@ const data = require('../../models/dataModel')
 const bot = require('../../bot')
 const { Readable } = require('stream');
 
-const limit = 58
+const limit = 10
 
 const getImages = async (req,res)=>{
-	const skip =  48//(req.query.page - 1) * limit
-	const filteredData = await data.find().sort({ createdAt: -1}).skip(skip)
+	const skip = (req.query.page - 1) * limit
+	const filteredData = await data.find().sort({ createdAt: -1}).skip(skip).limit(limit)
 	res.status(200).json(filteredData)
 	//console.log("Data sent :", filteredData)
 }
@@ -21,6 +21,7 @@ const getURL = async (req,res)=>{
     if (!response.ok) throw new Error("Failed to fetch image");
 
     const contentType = response.headers.get('content-type');
+    //const contentType = response.headers.get('content-type');
     res.set('Content-Type', contentType);
 
     // Convert Undici's ReadableStream to Node stream
