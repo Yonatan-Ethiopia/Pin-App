@@ -8,138 +8,19 @@ let currentPage = 1;
 let loading = false;
 let isLoading=false;
 let isInitial=true;
-const data2 = [{
-    image: "src/img1.jpg",
-    sender: "josh"
-},
-    {
-        image: "src/img2.jpg",
-        sender: "lolly"
-    },
-    {
-        image: "src/img3.jpg",
-        sender: "bob"
-    },
-    {
-        image: "src/img4.jpg",
-        sender: "belly"
-    },
-    {
-        image: "src/img5.jpg",
-        sender: "cushy"
-    },
-    {
-        image: "src/img6.jpg",
-        sender: "flower"
-    },
-    {
-        image: "src/img7.jpg",
-        sender: "ace"
-    },
-    {
-        image: "src/img8.jpg",
-        sender: "log"
-    },
-    {
-        image: "src/img9.jpg",
-        sender: "crown"
-    },
-    {
-        image: "src/img10.jpg",
-        sender: "tooth"
-    },
-    {
-        image: "src/img11.jpg",
-        sender: "flower"
-    },
-    {
-        image: "src/img12.jpg",
-        sender: "log"
-    },
-    {
-        image: "src/img13.jpg",
-        sender: "tooth"
-    },
-    {
-        image: "src/img14.jpg",
-        sender: "crop",
-        caption: ""
-    },
-    {
-        image: "src/img15.jpg",
-        sender: "flare"
-    },
-    {
-        image: "src/img16.jpg",
-        sender: "blake",
-        caption: ""
-    },
-    {
-        image: "src/img17.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img18.jpg",
-        sender: "okay",
-        caption: ""
-    },
-    {
-        image: "src/img19.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img20.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img21.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img22.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img23.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img24.jpg",
-        sender: "tooth",
-        caption: ""
-    },
-    {
-        image: "src/img25.jpg",
-        sender: "tooth",
-        caption: "lol"
-    },
-]
 
 document.addEventListener("DOMContentLoaded", () => {
   const feed = document.getElementById("feed");
-  //feed._masonry = new Masonry(feed, {
-    //itemSelector: '.card',
-    //columnWidth: '.grid-sizer',
-    //percentPostion: true,
-    //gutter: 10
-    
-//});
 })
 
 document.addEventListener("scroll", () => {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
   if (scrollTop > lastScrollTop) {
-    // Scrolling down
+    
     header.classList.add("hide");
   } else {
-    // Scrolling up
+   
     header.classList.remove("hide");
   }
 
@@ -166,7 +47,6 @@ document.getElementById("sidebarClose").addEventListener("click", () => {
     isDetail = false;
 });
 
-// Toggle sidebar
 menuBtn.addEventListener("click", () => {
     isDetail = true;
     console.log(isDetail)
@@ -178,7 +58,6 @@ menuBtn.addEventListener("click", () => {
     menuBtn.textContent = sidebar.classList.contains("active") ? "✖": "☰";
 });
 
-// Close sidebar when clicking outside
 document.addEventListener("click", (e) => {
 	if( isDetail ){
 	    isAnyWhere = true;
@@ -203,27 +82,21 @@ document.addEventListener("click", (e) => {
         const full_Card = document.getElementById("fullCard");
         const upperPart = document.getElementById("upperPart")
         const det = document.getElementById("det")
-        svg.classList.remove("clicked"); // reset
-        void svg.offsetWidth; // trigger reflow
+        svg.classList.remove("clicked");
+        void svg.offsetWidth; 
         svg.classList.add("clicked");
         if (full_Card) {
-             full_Card.classList.add("out"); // add exit animation
+             full_Card.classList.add("out");
 
              setTimeout(() => {
-                 document.getElementById("det").remove(); // remove after animation finishes
+                 document.getElementById("det").remove();
                  document.getElementById("feed").classList.remove("blurred");
-                 document.getElementById("main").style.overflow = "auto"; // restore scroll
+                 document.getElementById("main").style.overflow = "auto"; 
             }, 200); //
             isDetail = false;
         }
         if (upperPart) {
-             upperPart.classList.add("out"); // add exit animation
-
-        /*setTimeout(() => {
-            document.getElementById("det").remove(); // remove after animation finishes
-            document.getElementById("feed").classList.remove("blurred");
-            document.getElementById("main").style.overflow = "auto"; // restore scroll
-        }, 200); *///
+             upperPart.classList.add("out");
              isDetail = false;
         }
         justOpened=true;
@@ -231,46 +104,8 @@ document.addEventListener("click", (e) => {
 });
 
 
-function showSkeletons(count = 6) {
-    const feed = document.getElementById("feed");
-    feed.innerHTML = "";
 
-    for (let i = 0; i < count; i++) {
-        const card = document.createElement("div");
-        card.className = "card";
 
-        const cont = document.createElement("div");
-        cont.className = "cont"; // same as real layout
-
-        const skeletonImg = document.createElement("div");
-        skeletonImg.className = "skeleton skeleton-img";
-
-        const skeletonText1 = document.createElement("div");
-        skeletonText1.className = "skeleton skeleton-text";
-        skeletonText1.style.width = "60%";
-
-        const skeletonText2 = document.createElement("div");
-        skeletonText2.className = "skeleton skeleton-text";
-        skeletonText2.style.width = "80%";
-
-        cont.appendChild(skeletonImg);
-        cont.appendChild(skeletonText1);
-        cont.appendChild(skeletonText2);
-        card.appendChild(cont);
-        feed.appendChild(card);
-    }
-}
-function isEven(number) {
-    return number % 2 === 0;
-}
-function loadContent(data) {
-    showSkeletons(); // show placeholders first
-	  console.log(data)
-    // simulate fetch delay (e.g. 1 second)
-    setTimeout(() => {
-        renderRealPosts(data); // after "loading", show actual posts
-    }, 1000);
-}
 function closeDetail() {
 	justOpened=true;
     console.log("Close")
@@ -279,27 +114,21 @@ function closeDetail() {
     const full_Card = document.getElementById("fullCard");
     const upperPart = document.getElementById("upperPart")
     const det = document.getElementById("det")
-    svg.classList.remove("clicked"); // reset
-    void svg.offsetWidth; // trigger reflow
+    svg.classList.remove("clicked");
+    void svg.offsetWidth;
     svg.classList.add("clicked");
     if (full_Card) {
-        full_Card.classList.add("out"); // add exit animation
+        full_Card.classList.add("out");
 
         setTimeout(() => {
-            document.getElementById("det").remove(); // remove after animation finishes
+            document.getElementById("det").remove(); 
             document.getElementById("feed").classList.remove("blurred");
-            document.getElementById("main").style.overflow = "auto"; // restore scroll
+            document.getElementById("main").style.overflow = "auto"; 
         }, 200); //
         isDetail = false;
     }
     if (upperPart) {
-        upperPart.classList.add("out"); // add exit animation
-
-        /*setTimeout(() => {
-            document.getElementById("det").remove(); // remove after animation finishes
-            document.getElementById("feed").classList.remove("blurred");
-            document.getElementById("main").style.overflow = "auto"; // restore scroll
-        }, 200); *///
+        upperPart.classList.add("out"); 
         isDetail = false;
     }
 }
@@ -308,8 +137,6 @@ function detail(post) {
     setTimeout(()=> justOpened=false,100)
     const sent = "5"
     console.log(post)
-    // apply blur
-    // To remove it:
     const main = document.getElementById("main")
     main.style.overflow = "hidden"
     document.getElementById("feed").classList.add("blurred");
@@ -343,7 +170,6 @@ function detail(post) {
     const closeImg = document.createElement("img")
     closeImg.src = "src/close.png"
     closeImg.alt = "close";
-    /*closeB.appendChild(closeImg);*/
     upper_Part.appendChild(closeB);
     const footer_Part = document.createElement("div");
     footer_Part.className = "footer_P"
@@ -370,8 +196,7 @@ function detail(post) {
 }
 const feed = document.getElementById("feed");
 async function getPath(id){
-	//const urlRes = await fetch(`/api/get/Images/${id}`)
-	//const { imgURL } = await urlRes.json()
+	
 	const imgPath = await fetch(`/api/get/Image/${id}`);
 	console.log("file link: ",imgPath)
 	return imgPath 
@@ -391,11 +216,6 @@ async function renderRealPosts(data) {
 
         const cont = document.createElement("div");
         cont.className = "cont";
-
-        // Skeletons
-        
-
-        // Real Elements
         const img = document.createElement("img");
         const sender = document.createElement("div");
         sender.className = "sender";
@@ -404,19 +224,18 @@ async function renderRealPosts(data) {
         img.src = `/api/get/Images/${post.img}`;
         console.log(img.src)
         img.loading = "lazy";
-		//img.style.display="none"
-        // Handle image loading and fallback
+		
         promises.push(new Promise((resolve) => {
             img.onload = () => {
                 console.log("Image loaded: ", img.src);
 				console.log("cons")
-                //img.style.display = "block";
+               
                 sender.style.display = "block";
                 resolve();
             };
             img.onerror = () => {
-                card.remove(); // remove card if failed
-                resolve(); // still resolve to not hang Promise.all
+                card.remove(); 
+                resolve(); 
             };
         }));
 
@@ -436,12 +255,12 @@ async function renderRealPosts(data) {
         });
     }
 
-    // Wait for all images to load
+    
     await Promise.all(promises);
 
-    // Then apply Masonry layout
+   
     imagesLoaded(feed, () => {
-		//img.style.display = "block";
+		
 		feed.style.display="block"
 		isInitial=false;
 		loader.style.display = "none"
@@ -477,33 +296,15 @@ window.addEventListener("scroll", () => {
   }
 });
 
-// Assuming this function fetches the image URL
 async function getImageURL(fileId) {
     const res = await fetch(`/api/get/Images/${fileId}`);
     const data = await res.json();
-    return data.file; // Assuming the backend returns the image URL in 'file' property
+    return data.file; 
 }
 
 
 
 
 loadInitialPosts()
-/*
-for( i=0, i<data.length, i++){
-    const card = document.getElementById("card")
-    const card2 = document.getElementById("card2")
-    const img = document.createElement("img")
-    img.src = post.image;
-    const sender = document.createElement("div");
-    sender.className = "sender";
-    sender.textContent = post.sender;
-    if( true ){
-        card.appendChild(img);
-        card.appendChild(sender);
-        feed.appendChild(card);
-    }else{
-        card2.appendChild(img);
-        card2.appendChild(sender);
-        feed.appendChild(card);
-    }
+
 }*/
