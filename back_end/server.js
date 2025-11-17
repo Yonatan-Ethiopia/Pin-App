@@ -36,7 +36,7 @@ app.get('/',(req,res)=>{
 })
 // Telegram Bot setup
 const token = process.env.BOT_TOKEN;
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 const WEBHOOK_URL = process.env.WEBHOOK_URL;
 
 const bot = new TelegramBot(token, { webHook: false });
