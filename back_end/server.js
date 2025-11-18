@@ -55,7 +55,7 @@ bot.onText(/\/start/, async (msg) => {
       {
        text: "Open Gallery",
         web_app: {
-          url: WEBHOOK_URL
+          url: "https://aastu-photography.vercel.app"
         }
       }
     ]]
